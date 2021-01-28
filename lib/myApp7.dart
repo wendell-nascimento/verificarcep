@@ -1,6 +1,8 @@
-import 'package:apicorreios_app/pesquisaCep.dart';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
+
 
 class MyApp7 extends StatefulWidget {
   @override
@@ -9,13 +11,12 @@ class MyApp7 extends StatefulWidget {
 
 class _MyApp7State extends State<MyApp7> {
   TextEditingController _controller = TextEditingController();
+  String _info = "***";
 
   int _verificaCEP(String CEP){
     int numero = int.tryParse(CEP);
     return numero;
   }
-
-  String _info = "***";
 
   @override
   Widget build(BuildContext context) {
@@ -38,30 +39,23 @@ class _MyApp7State extends State<MyApp7> {
                 hintText: "Coloque o CEP. Exemplo: 69000000",
               ),
             ),
-            Center(child: Text(_info)),
+
+            Center(child: Text(_info, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),)),
+
             RaisedButton(
                 child: Text("Verificar", style: TextStyle(fontSize: 20,),),
                 color: Colors.yellow,
-                onPressed: () {
-              //print(_controller.text);
+                onPressed: () async {
+
               int cep = _verificaCEP(_controller.text);
-              if((cep == null) || (cep.toString().length != 8)){
-                print("CEP INVÁLIDO");
+              if((cep == null) || (_controller.text.characters.length != 8)){
+                print("CEP INVÁLIDO: $cep");
                 setState(() {
                   _info = "CEP INVÁLIDO";
                 });
               }
               else{
-                setState(() {
-                    _info = "ESTE CEP PODE SER VERIFICADO";
-
-                  /**
-                   * IMPLEMENTAR
-                   */
-
-                  pesquisar(_controller.text);
-
-                });
+                await pesquisar(_controller.text);
               }
             }),
           ],
@@ -69,4 +63,33 @@ class _MyApp7State extends State<MyApp7> {
       ),
     );
   }
+
+  pesquisar(String CEP) async{
+    String url ="https://viacep.com.br/ws/$CEP/json/";
+
+    print("Irei verificar.. só um minuto meu chapa");
+
+    http.Response response = await http.get(url);
+    Map<String, dynamic> dados = json.decode(response.body);
+
+
+
+      setState(() {
+        String check = dados["bairro"];
+
+        _info = "Verificando...";
+
+        if(check != null){
+          _info = "Bairro: ${dados["bairro"]} \n"
+                  "Cidade: ${dados["localidade"]} \n"
+                  "Logradouro: ${dados["logradouro"]}";
+        }
+        else{
+          _info = "ERROR";
+        }
+      });
+    print(response.body);
+  }
 }
+
+
