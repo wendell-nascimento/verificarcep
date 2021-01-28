@@ -1,4 +1,6 @@
+import 'package:apicorreios_app/pesquisaCep.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class MyApp7 extends StatefulWidget {
   @override
@@ -29,6 +31,7 @@ class _MyApp7State extends State<MyApp7> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             TextField(
+              keyboardType: TextInputType.number,
               controller: _controller,
               maxLength: 8,
               decoration: InputDecoration(
@@ -55,6 +58,9 @@ class _MyApp7State extends State<MyApp7> {
                   /**
                    * IMPLEMENTAR
                    */
+
+                  pesquisar(_controller.text);
+
                 });
               }
             }),
