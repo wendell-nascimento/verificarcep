@@ -45,7 +45,7 @@ class _MyApp7State extends State<MyApp7> {
             RaisedButton(
                 child: Text("Verificar", style: TextStyle(fontSize: 20,),),
                 color: Colors.yellow,
-                onPressed: () async {
+                onPressed: ()  {
 
               int cep = _verificaCEP(_controller.text);
               if((cep == null) || (_controller.text.characters.length != 8)){
@@ -55,7 +55,7 @@ class _MyApp7State extends State<MyApp7> {
                 });
               }
               else{
-                await pesquisar(_controller.text);
+                pesquisar(_controller.text);
               }
             }),
           ],
