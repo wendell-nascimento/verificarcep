@@ -51,6 +51,10 @@ class _MyApp7State extends State<MyApp7> {
               else{
                 setState(() {
                     _info = "ESTE CEP PODE SER VERIFICADO";
+
+                  /**
+                   * IMPLEMENTAR
+                   */
                 });
               }
             }),
